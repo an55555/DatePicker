@@ -1,27 +1,3 @@
-<!--<template>-->
-<!--<div class="hello">-->
-<!--<date-picker  v-model="date" :modelClass="dateClass"></date-picker>{{date}}-->
-<!--</div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import DatePicker from './DatePicker.vue'-->
-<!--import test from './test.vue'-->
-<!--export default {-->
-<!--components: {-->
-<!--'date-picker':DatePicker,-->
-<!--'v-edit-div':test-->
-<!--},-->
-<!--data () {-->
-<!--return {-->
-<!--text:'改一下试一试',-->
-<!--msg: 'Welcome to Your Vue.js App',-->
-<!--date:'2017-3-10',-->
-<!--dateClass:'myClass'-->
-<!--}-->
-<!--}-->
-<!--}-->
-<!--</script>-->
 
 <template>
   <div style="position: relative;" @mousemove.prevent @selectstart.prevent>
