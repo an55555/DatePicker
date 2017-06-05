@@ -1,11 +1,20 @@
 # DatePicker
-A simple TimePicker component for VUE
+
+> A simple TimePicker component for VUE. Just simple demo For reference only
+
+
 ## Parametes
+
 v-model:Binding data
+
 showTime:'true' or 'false' default:`'false'` . Whether the time options is displayed
+
 useConfirm:'true' or 'false' default:`'false'` . Whether make time by btn
+
 dataFormat:default`'YYYY-MM-DD hh:mm:ss'` Time format
+
 placeholder:default`请选择日期日期`
+
 ## Usage
 1.Import the TimePicker component in VUE
 ```bash
