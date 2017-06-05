@@ -1,12 +1,11 @@
 # DatePicker
 A simple TimePicker component for VUE
-## Status
-Now TimePicker with only the most choice of time .The function is not comprehensive enough
-In my options,it should have these features:
-1. Can choose the specific time
-2. Can choose today quickly
-3. Restricted date range 
-These features will be improved in later versions
+## Parametes
+v-model:Binding data
+showTime:'true' or 'false' default:`'false'` . Whether the time options is displayed
+useConfirm:'true' or 'false' default:`'false'` . Whether make time by btn
+dataFormat:default`'YYYY-MM-DD hh:mm:ss'` Time format
+placeholder:default`请选择日期日期`
 ## Usage
 1.Import the TimePicker component in VUE
 ```bash
@@ -18,6 +17,6 @@ import myDatepicker from '../components/DatePicker.vue'; //引入对应的组件
 ```
 2.Use the TimePicker component in page
 ```bash
-<date-picker v-model="item.value" ></date-picker>
+ <date-picker v-model="time" useConfirm='true' showTime="true"   placeholder="!自定义placeholder?请选择日期日期"   dataFormat="YYYY-MM-DD"></date-picker>
 ```
 Use v-model for data binding
