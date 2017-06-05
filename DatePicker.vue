@@ -55,10 +55,10 @@
 
 <script>
     export default {
-        props: ['value','modelClass','placeholder','dataDormat','useConfirm','showTime'],
+        props: ['value','modelClass','placeholder','dataFormat','useConfirm','showTime'],
         data () {
             return {
-                format:this.dataDormat?this.dataDormat:"YYYY-MM-DD hh:mm:ss",
+                format:this.dataFormat?this.dataFormat:"YYYY-MM-DD hh:mm:ss",
                 modelDate:this.value,  //绑定的日期
                 useConfirmBtn:this.useConfirm=='true'?true:false, //是否需要点了确定按钮再退出
                 getTime:this.showTime=='true'?true:false,
