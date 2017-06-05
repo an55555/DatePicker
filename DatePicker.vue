@@ -1,9 +1,9 @@
 <template>
-  <div style="position: relative;"  @selectstart.prevent>
-    <div>
-      <input type="text"  v-model="modelDate"  @click="showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
+  <div style="position: relative;width: 100%;height: 100%;" @mousemove.prevent @selectstart.prevent>
+    <div style="position: relative;width: 100%;height: 100%;">
+      <input type="text"  v-model="showModelDate"  @click="showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
       <div @click.stop class="DatePickerBox DatePickerBoxPosition" v-show="showDatePickerBox">
-        <div id="app" class="DatePicker">
+        <div  class="DatePicker">
           <div class="DatePickerTop">
             <span @click="year--"  class="iconfont control">&#xe697;</span><span class="showData"  @click="choseYear=year;showChoseMonth=showChoseDate=false;showChoseYear=true;">{{year}}</span><span @click="year++" class="iconfont control">&#xe6a7;</span>
             <span @click="month--" class="iconfont control">&#xe697;</span><span  class="showData" @click="showChoseYear=showChoseDate=false;showChoseMonth=true;">{{month+1}}月</span><span @click="month++" class="iconfont control">&#xe6a7;</span>
@@ -18,13 +18,13 @@
                 <a class="toDay" v-if="new Date(item).toDateString() === new Date().toDateString()">今</a>
             </span>
           </div>
-          <div style="text-align: right;padding: 0 12px">
-              <span style="display: inline-block;float: left">
+          <div style="text-align: right;padding: 0 12px" v-show="showChoseDate">
+              <span v-if="getTime" style="display: inline-block;float: left">
                 <input v-model="hour" type="number" min="0" max="23" class="numberInput">: <input v-model="minutes" type="number" min="0" max="59" class="numberInput">: <input v-model="seconds" type="number" min="0" max="59" class="numberInput">
               </span>
-            <span class="dateOperateBtn" @click="modelDate='';modeStamp=''">清空</span>
-            <span class="dateOperateBtn" @click="getNowDate();modeStamp=Date.parse(new Date())">今天</span>
-            <span class="dateOperateBtn" @click="getDateBtn">确认</span>
+            <span class="dateOperateBtn" @click="clearTime">清空</span>
+            <span class="dateOperateBtn" @click="choseToday">今天</span>
+            <span class="dateOperateBtn" @click="getDateBtn" v-if="useConfirmBtn">确认</span>
           </div>
           <!--弹出月份选择-->
           <div class="DatePickerMonth" v-show="showChoseMonth">
@@ -55,30 +55,32 @@
 
 <script>
     export default {
-        props: ['value','modelClass','placeholder','dataDormat'],
+        props: ['value','modelClass','placeholder','dataDormat','useConfirm','showTime'],
         data () {
             return {
-                'format':this.dataDormat?this.dataDormat:"YYYY-MM-DD hh:mm:ss",
-                'modelDate':this.value,  //绑定的日期
-                'modeStamp':'',  //选择的时间戳
-                'showDatePickerBox':false,  //日期选择控件状态显示
-                'today':new Date().getDate(),//当前日
-                'year':new Date().getFullYear(), //当前年份
-                'month':new Date().getMonth(),//当前月份
-                'week':new Date().getDay(),//当前是星期几
-                'day':new Date().getDate(),//当前日
-                'hour':new Date().getHours(),//当前时
-                'minutes':new Date().getMinutes(), //当前分
-                'seconds':new Date().getSeconds(),//当前秒
-                'monthDayNum':new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(),//当前月份天数
-                'firstWeek':1,//当前月份一号是星期几
-                'firstStamp':1,//当前表格第一格的时间戳
-                'firstDayStamp':1,//当前1号时间戳
-                'dayStamp':24*60*60*1000 ,//一天的时间戳
-                'choseYear':new Date().getFullYear(), //弹出年份选择
-                'showChoseDate':true,  //日选择
-                'showChoseMonth':false,//月选择
-                'showChoseYear':false,//年选择
+                format:this.dataDormat?this.dataDormat:"YYYY-MM-DD hh:mm:ss",
+                modelDate:this.value,  //绑定的日期
+                useConfirmBtn:this.useConfirm=='true'?true:false, //是否需要点了确定按钮再退出
+                getTime:this.showTime=='true'?true:false,
+                modeStamp:'',  //选择的时间戳
+                showDatePickerBox:false,  //日期选择控件状态显示
+                today:new Date().getDate(),//当前日
+                year:new Date().getFullYear(), //当前年份
+                month:new Date().getMonth(),//当前月份
+                week:new Date().getDay(),//当前是星期几
+                day:new Date().getDate(),//当前日
+                hour:new Date().getHours(),//当前时
+                minutes:new Date().getMinutes(), //当前分
+                seconds:new Date().getSeconds(),//当前秒
+                monthDayNum:new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(),//当前月份天数
+                firstWeek:1,//当前月份一号是星期几
+                firstStamp:1,//当前表格第一格的时间戳
+                firstDayStamp:1,//当前1号时间戳
+                dayStamp:24*60*60*1000 ,//一天的时间戳
+                choseYear:new Date().getFullYear(), //弹出年份选择
+                showChoseDate:true,  //日选择
+                showChoseMonth:false,//月选择
+                showChoseYear:false,//年选择
             }
         },
         methods:{
@@ -102,17 +104,38 @@
                 var timeDate=this.year+'-'+(this.month+1)+'-1 12:12:12'  //当月1号的日期格式
                 this.firstDayStamp = Date.parse(new Date(timeDate)); //指定日期的时间戳
                 this.firstWeek=new Date(this.year,this.month,1).getDay();//当时间改变时获取改变时间后的第一天的星期
-                this.firstStamp=this.firstDayStamp-(this.firstWeek-1)*this.dayStamp;//当表格第一格的时间戳
+                this.firstStamp=this.firstDayStamp-(this.firstWeek==0?6:this.firstWeek-1)*this.dayStamp;//当表格第一格的时间戳
             },
             getDate:function (data) {
                 this.modeStamp=data
+                if(!this.useConfirmBtn){
+                    this.getDateBtn()
+                }
 //                this.modelDate=this.filterDataNum(this.formatDateYear(data))+'.'+this.filterDataNum((this.formatDateMonth(data)+1))+'.'+this.filterDataNum(this.formatDateDate(data));
 //                this.modelDate=this.Format(data);
 //                this.$emit('input', this.modelDate)
 //                this.showDatePickerBox=false
-            },  //获取选中的是日期
+            },
+//            清空日期
+          clearTime:function(){
+              this.modelDate='';
+              this.modeStamp='';
+              if(!this.useConfirmBtn){
+                  this.getDateBtn()
+              }
+          },
+//            选择今天
+            choseToday:function(){
+                this.getNowDate();
+                this.modeStamp=Date.parse(new Date())
+                if(!this.useConfirmBtn){
+                    this.getDateBtn()
+                }
+            },
+            //获取选中的是日期
             getDateBtn:function () { //点击确认按钮
-                this.modelDate=this.Format(this.modeStamp);
+              //  this.modelDate=this.Format(this.modeStamp);    以基体时间为基准
+                this.modelDate=this.modeStamp;  //以时间戳
                 this.$emit('input', this.modelDate)
                 this.showDatePickerBox=false
             },
@@ -126,8 +149,12 @@
             formatDateMinutes:function(val) {return new Date(val).getMinutes()},
             formatDateSeconds:function(val) {return new Date(val).getSeconds()},
             Format:function (stamps) {
+                if(stamps==''||!stamps){
+                    return ''
+                }
                 var fmt=this.format
-                var getDate=stamps==''||!stamps?new Date():new Date(stamps)
+//                var getDate=stamps==''||!stamps?new Date():new Date(stamps)
+                var getDate=new Date(stamps);
                 var o = {
                     "M+": getDate.getMonth() + 1, //月份
                     "D+": getDate.getDate(), //日
@@ -154,6 +181,7 @@
                 if(this.modelDate==''||this.modelDate==undefined){
                     this.getNowDate()
                 }else{
+                    /*
                     if(this.modelDate.indexOf(".") > 0 ){
                         var arr=this.modelDate.split('.')
                     }else   if(this.modelDate.indexOf("-") > 0 ){
@@ -164,6 +192,9 @@
                     var getArr=arr[0]+'-'+arr[1]+'-'+arr[2]
                     var stringTime=Date.parse(new Date(getArr))
                     this.modeStamp=stringTime   //如果默认是有值  才需要显示当前已选择的日期
+                     */
+                    var stringTime=this.modelDate
+                    this.modeStamp=stringTime;
                     this.year=this.formatDateYear(stringTime) //当前年份
                     this.month=this.formatDateMonth(stringTime)//当前月份
                     this.week=new Date().getDay()//当前是星期几
@@ -180,8 +211,12 @@
                 }
                 return dateList
             },
+            'showModelDate':function () {
+                return this.Format(this.modelDate)
+            },
         },
         watch:{
+
             'year':'changeTime',//年月改变时   改变firstStampr
             'month':'changeTime',    //年月改变时   改变firstStampr
             'hour':function () {
@@ -251,13 +286,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" rel="stylesheet/scss" scoped>
-  @import "iconfont/iconfont.css";
   /*  $primaryColor: #6aaff7;*/
   $primaryColor: #5ED4CA;
   .thisPickInput{
-    padding: 4px;
-    border-radius: 5px;
     width: 100%;
+    height: 100%;
+    border:0;
+    padding: 0 10px;
+    cursor: pointer;
   }
   .DatePickerBox{
     display: inline-block;
