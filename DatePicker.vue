@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative;width: 100%;height: 100%;" @mousemove.prevent @selectstart.prevent>
+  <div style="position: relative;width: 100%;height: 100%;"  @selectstart.prevent>
     <div style="position: relative;width: 100%;height: 100%;">
       <input type="text"  v-model="showModelDate"  @click="showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
       <div @click.stop class="DatePickerBox DatePickerBoxPosition" v-show="showDatePickerBox">
@@ -148,7 +148,7 @@
             formatDateHour:function(val) {return new Date(val).getHours()},
             formatDateMinutes:function(val) {return new Date(val).getMinutes()},
             formatDateSeconds:function(val) {return new Date(val).getSeconds()},
-            Format:function (stamps) {
+/*            Format:function (stamps) {
                 if(stamps==''||!stamps){
                     return ''
                 }
@@ -168,6 +168,29 @@
                 for (var k in o)
                     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
+            },*/
+            Format:function (stamps) {
+                if(stamps==''||!stamps){
+                    return ''
+                }
+                var fmt=this.format
+//                var getDate=stamps==''||!stamps?new Date():new Date(stamps)
+                var getDate=new Date(stamps);
+                var escapeChars = {
+                    "YYYY": getDate.getFullYear(), //年份
+                    "MM": getDate.getMonth() + 1, //月份
+                    "DD": getDate.getDate(), //日
+                    "hh": getDate.getHours(), //小时
+                    "mm": getDate.getMinutes(), //分
+                    "ss": getDate.getSeconds(), //秒
+                    "qq": Math.floor((getDate.getMonth() + 3) / 3), //季度
+                    "SS": getDate.getMilliseconds() //毫秒
+                };
+                var fm=fmt.replace(new RegExp(Object.keys(escapeChars).join('|'),'g'),function(match){
+                    console.log(match.length)
+                    return escapeChars[match]>=10?escapeChars[match]:'0'+escapeChars[match]
+                })
+                return fm
             },
             getNowDate:function () {
                 this.today=new Date().getDate()//当前日
