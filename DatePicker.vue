@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative;width: 100%;height: 100%;"  @selectstart.prevent>
     <div style="position: relative;width: 100%;height: 100%;">
-      <input type="text"  v-model="showModelDate"  @click="showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
+      <input type="text"  v-model="showModelDate"  @click="showChoseMonth=showChoseYear=false;showChoseDate=true;showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
       <div @click.stop class="DatePickerBox DatePickerBoxPosition" v-show="showDatePickerBox">
         <div  class="DatePicker">
           <div class="DatePickerTop">
@@ -47,10 +47,10 @@
             <span @click="choseYear-=12" class="iconfont choseYear" style="left: -7px">&#xe697;</span>
             <span @click="choseYear+=12" class="iconfont choseYear" style="right: -7px">&#xe6a7;</span>
             <div  v-for="item in 12" class="monthUnit">
-          <span @click="year=(choseYear+item-5);showChoseYear=showChoseMonth=false;showChoseDate=true;" class="dayUnit" >
-            {{choseYear+item-5}}
-            <a class="toDay" v-if="(choseYear+item-6) === new Date().getFullYear()">今</a>
-        </span>
+                <span @click="year=(choseYear+item-5);showChoseYear=showChoseMonth=false;showChoseDate=true;" class="dayUnit" >
+                  {{choseYear+item-5}}
+                  <a class="toDay" v-if="(choseYear+item-5) === new Date().getFullYear()">今</a>
+              </span>
             </div>
           </div>
         </div>
@@ -148,6 +148,10 @@
             },
             //获取选中的是日期
             getDateBtn:function () { //点击确认按钮
+                if(!this.modeStamp){
+                    this.showDatePickerBox = false
+                    return
+                }
                 var getTime=this.Format(this.modeStamp,"YYYY-MM-DD")  //获取选择时间时间的日期（只要日）
                 if(this.showTime){
                     getTime+=" "+this.formatTime(this.hour)+":"+this.formatTime(this.minutes)+":"+this.formatTime(this.seconds) //然后加上具体的时间
