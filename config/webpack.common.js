@@ -13,7 +13,7 @@ module.exports={
         // filename: '[name].[chunkhash].js',  //在开发模式下会出错
         filename: '[name].bundle.js',
         chunkFilename: '[name].bundle.js',
-        path:path.resolve(__dirname,'dist')
+        path:path.resolve(__dirname,'../dist')
     },
     module:{
         rules:[
