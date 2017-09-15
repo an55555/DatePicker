@@ -4,6 +4,8 @@
 
 **[在线Demo](https://an55555.github.io/DatePicker-VUE/dist/index.html?_blank)**
 
+<a href="http://write.blog.csdn.net/postlist" target="_blank">麦田里的码农</a>
+
 ## Parametes
 
 v-model:Binding data(*)
