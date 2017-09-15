@@ -65,7 +65,7 @@
         props: ['value','modelClass','placeholder','dataFormat','useConfirm','showTime','useStamp','maxTime','minTime'],
         data () {
             return {
-                format:this.dataFormat?this.dataFormat:"YYYY-MM-DD hh:mm:ss",
+                format:this.dataFormat?this.dataFormat:"YYYY-MM-DD",
                 modelDate:this.value,  //绑定的日期
                 useConfirmBtn:this.useConfirm=='true'?true:false, //是否需要点了确定按钮再退出
                 getTime:this.showTime=='true'?true:false,
@@ -156,6 +156,7 @@
                 if(this.showTime){
                     getTime+=" "+this.formatTime(this.hour)+":"+this.formatTime(this.minutes)+":"+this.formatTime(this.seconds) //然后加上具体的时间
                 }
+
                 var stamp=!this.useStamp?getTime:Date.parse(new Date(getTime))
                 this.$emit('input', stamp)
                 this.showDatePickerBox=false
@@ -374,12 +375,28 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   /*  $primaryColor: #6aaff7;*/
   $primaryColor: #5ED4CA;
+  @font-face {
+    font-family: 'iconfont';  /* project id 417575 */
+    src: url('//at.alicdn.com/t/font_417575_qqiq45fgxbo9lik9.eot');
+    src: url('//at.alicdn.com/t/font_417575_qqiq45fgxbo9lik9.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_417575_qqiq45fgxbo9lik9.woff') format('woff'),
+    url('//at.alicdn.com/t/font_417575_qqiq45fgxbo9lik9.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_417575_qqiq45fgxbo9lik9.svg#iconfont') format('svg');
+  }
+  .iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
+
   .thisPickInput{
-    width: 100%;
+    /*width: 100%;*/
     height: 100%;
-    border:0;
-    padding: 0 10px;
+    border:solid 1px #c7c6c6;
+    padding: 5px 10px;
     cursor: pointer;
+    border-radius: 2px;
   }
   .DatePickerBox{
     display: inline-block;
