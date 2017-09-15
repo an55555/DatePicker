@@ -2,7 +2,7 @@
 
 > A simple TimePicker component for VUE. Just simple demo for reference only
 
-**<a href="https://an55555.github.io/DatePicker-VUE/dist/index.html" target="_blank">在线Demo]</a>**
+**<a href="https://an55555.github.io/DatePicker-VUE/dist/index.html" target="_blank">在线Demo</a>**
 
 ## Parametes
 
