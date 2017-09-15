@@ -1,43 +1,55 @@
 <template>
     <div id="example">
-        <div class="thisInlineBlock" @click="timePicker.format=true">
-            <span class="radioBoxBg " :class="timePicker.format?'radioBoxBg_1':'radioBoxBg_0'" ></span><span>"YYYY-MM-DD"格式</span>
-        </div>
-        <div class="thisInlineBlock" @click="timePicker.format=false">
-            <span class="radioBoxBg " :class="timePicker.format?'radioBoxBg_0':'radioBoxBg_1'"></span><span>"YYYY-MM-DD hh:mm:ss"格式</span>
-        </div>
+        <h4>"YYYY-MM-DD"格式</h4>
         <date-picker
-                v-model="minTime"
+                v-model="timePicker1.date"
                 placeholder="选择时间"
         ></date-picker>
-        <h4>"YYYY-MM-DD hh:mm:ss"格式选择</h4>
+        <h4>"YYYY-MM-DD hh:mm:ss"格式</h4>
         <date-picker
-                v-model="minTime"
+                v-model="timePicker2.date"
                 placeholder="选择时间"
-                dataFormat="YYYY-MM-DD hh:mm:ss"
-                showTime=true
+                dateFormat="YYYY-MM-DD hh:mm:ss"
+        ></date-picker>
+        <h4>通过按键选择</h4>
+        <date-picker
+                v-model="timePicker3.date"
+                placeholder="选择时间"
                 useConfirm=true
         ></date-picker>
         <h4>时间范围限制</h4>
         <div class="timeBox">
             <date-picker
-                    v-model="minTime"
+                    v-model="timePicker4.minTime"
                     placeholder="开始时间"
-                    dataFormat="YYYY-MM-DD hh:mm:ss"
-                    showTime=true
-                    useConfirm=true
-                    :maxTime="maxTime"
+                    :maxTime="timePicker4.maxTime"
             ></date-picker>
         </div>
         -
         <div class="timeBox">
             <date-picker
-                    v-model="maxTime"
+                    v-model="timePicker4.maxTime"
                     placeholder="结束时间"
-                    dataFormat="YYYY-MM-DD hh:mm:ss"
-                    showTime=true
-                    useConfirm=true
-                    :minTime="minTime"
+                    :minTime="timePicker4.minTime"
+            ></date-picker>
+        </div>
+
+        <h4>时间范围限制(包含时间)</h4>
+        <div class="timeBox">
+            <date-picker
+                    v-model="timePicker5.minTime"
+                    placeholder="开始时间"
+                    dateFormat="YYYY-MM-DD hh:mm:ss"
+                    :maxTime="timePicker5.maxTime"
+            ></date-picker>
+        </div>
+        -
+        <div class="timeBox">
+            <date-picker
+                    v-model="timePicker5.maxTime"
+                    placeholder="结束时间"
+                    dateFormat="YYYY-MM-DD hh:mm:ss"
+                    :minTime="timePicker5.minTime"
             ></date-picker>
         </div>
 
@@ -56,9 +68,21 @@
                 time:'',
                 maxTime:'',
                 minTime:'',
-                timePicker:{
-                    data:'',
-                    format:true,
+                timePicker1:{
+                    date:''
+                },
+                timePicker2:{
+                    date:'',
+                },
+                timePicker3:{
+                    date:'',
+
+                },
+                timePicker4:{
+                    maxTime:'',
+                    minTime:'',
+                },
+                timePicker5:{
                     maxTime:'',
                     minTime:'',
                 }
@@ -67,17 +91,17 @@
     }
 </script>
 
-<style scoped>
+<style>
     @import "https://an55555.github.io/CSS-Layout/style-l.css";
     .timeBox{
         display: inline-block;
 
     }
-    .thisInlineBlock{
-        display: inline-block;
-        margin-right: 20px;
-        cursor: pointer;
+    h1.sayHello{
+        padding: 0 40px;
     }
+    #example{
+        padding: 0 40px;
 
-    /*.inputStyle{border: solid 1px #eee}*/
+    }
 </style>

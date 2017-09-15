@@ -7,11 +7,9 @@
 
 v-model:Binding data(*)
 
-showTime:`true` or `false` default:`'false'` . Whether the time options is displayed
+useConfirm:`true` or `false`  default:`'false'` . get date by btn 
 
-useConfirm:`true` or `false`  default:`'false'` . Whether make time by btn
-
-dataFormat:default`'YYYY-MM-DD hh:mm:ss'` Time format
+dataFormat:default`'YYYY-MM-DD'`. date format
 
 placeholder:default`请选择日期` 
 
@@ -19,9 +17,10 @@ modelClass:default none .The class used by internal input
 
 useStamp:`true` or `false` default `false` .Returns in timestamp format
 
-minTime||:minTime: default none .default none .Minimum selection time 
+minTime: default none .default none .Minimum selection time 
 
-maxTime||:maxTime: default none .Maximum selection time 
+maxTime: default none .Maximum selection time 
+
 
 ## Usage
 1.Import the TimePicker component in VUE
@@ -36,12 +35,9 @@ import myDatepicker from '../components/DatePicker.vue'; //引入对应的组件
 ```html
 <date-picker
            v-model="getPageData.arg.startTime"
-           modelClass="inputStyle"
+           modelClass="inputStyle" 
            placeholder="开始时间"
            dataFormat="YYYY-MM-DD hh:mm:ss"
-           showTime=true
-           useConfirm=true
            :maxTime="getPageData.arg.endTime">
 </date-picker>
 ```
-Use v-model for data binding

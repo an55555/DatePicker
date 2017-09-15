@@ -62,13 +62,13 @@
 
 <script>
     export default {
-        props: ['value','modelClass','placeholder','dataFormat','useConfirm','showTime','useStamp','maxTime','minTime'],
+        props: ['value','modelClass','placeholder','dateFormat','useConfirm','showTime','useStamp','maxTime','minTime'],
         data () {
             return {
-                format:this.dataFormat?this.dataFormat:"YYYY-MM-DD",
+                format:this.dateFormat?this.dateFormat:"YYYY-MM-DD", //格式
+                getTime:this.showTime||this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否显示时间选择
+                useConfirmBtn:this.useConfirm||this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否要点击按钮才退出
                 modelDate:this.value,  //绑定的日期
-                useConfirmBtn:this.useConfirm=='true'?true:false, //是否需要点了确定按钮再退出
-                getTime:this.showTime=='true'?true:false,
                 modeStamp:'',  //选择的时间戳
                 showDatePickerBox:false,  //日期选择控件状态显示
                 today:new Date().getDate(),//当前日
@@ -153,12 +153,13 @@
                     return
                 }
                 var getTime=this.Format(this.modeStamp,"YYYY-MM-DD")  //获取选择时间时间的日期（只要日）
-                if(this.showTime){
+                if(this.getTime){
+                    console.log(this.hour)
                     getTime+=" "+this.formatTime(this.hour)+":"+this.formatTime(this.minutes)+":"+this.formatTime(this.seconds) //然后加上具体的时间
                 }
 
-                var stamp=!this.useStamp?getTime:Date.parse(new Date(getTime))
-                this.$emit('input', stamp)
+                var getTime=!this.useStamp?getTime:Date.parse(new Date(getTime))
+                this.$emit('input', getTime)
                 this.showDatePickerBox=false
             },
             getPickerMonth:function (month) {
@@ -193,7 +194,7 @@
             },*/
             /*时间戳转日期*/
             Format:function (stamps,format) {  //时间戳转日期
-                if(stamps==''||!stamps){
+                if(!stamps){
                     return ''
                 }
                 var fmt=format||this.format
