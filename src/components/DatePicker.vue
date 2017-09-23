@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative;width: 100%;height: 100%;"  @selectstart.prevent>
     <div style="position: relative;width: 100%;height: 100%;">
-      <input type="text"  v-model="showModelDate"  @click="showChoseMonth=showChoseYear=false;showChoseDate=true;showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
+        <input type="text"  :value="Format(modelDate,format)"  @click="showChoseMonth=showChoseYear=false;showChoseDate=true;showDatePickerBox=!showDatePickerBox;getValue()" :class="modelClass?modelClass:'thisPickInput'" readonly="true"  :placeholder="placeholder?placeholder:'请选择日期'"><br>
       <div @click.stop class="DatePickerBox DatePickerBoxPosition" v-show="showDatePickerBox">
         <div  class="DatePicker">
           <div class="DatePickerTop">
@@ -66,8 +66,8 @@
         data () {
             return {
                 format:this.dateFormat?this.dateFormat:"YYYY-MM-DD", //格式
-                getTime:this.showTime||this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否显示时间选择
-                useConfirmBtn:this.useConfirm||this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否要点击按钮才退出
+                getTime:this.showTime?this.showTime:this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否显示时间选择
+                useConfirmBtn:this.useConfirm?this.useConfirm:this.dateFormat=="YYYY-MM-DD hh:mm:ss",//是否要点击按钮才退出
                 modelDate:this.value,  //绑定的日期
                 modeStamp:'',  //选择的时间戳
                 showDatePickerBox:false,  //日期选择控件状态显示
@@ -76,9 +76,9 @@
                 month:new Date().getMonth(),//当前月份
                 week:new Date().getDay(),//当前是星期几
                 day:new Date().getDate(),//当前日
-                hour:this.formatDateHour(this.value)||new Date().getHours(),//当前时
-                minutes:this.formatDateMinutes(this.value)||new Date().getMinutes(), //当前分
-                seconds:this.formatDateSeconds(this.value)||new Date().getSeconds(),//当前秒
+                hour:new Date().getHours(),//当前时
+                minutes:new Date().getMinutes(), //当前分
+                seconds:new Date().getSeconds(),//当前秒
                 monthDayNum:new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(),//当前月份天数
                 firstWeek:1,//当前月份一号是星期几
                 firstStamp:1,//当前表格第一格的时间戳
@@ -108,8 +108,10 @@
                 return val<10?'0'+val:val
             },
             getFirstStamp:function(){  //获取表格第一天的时间戳
-                var timeDate=this.year+'-'+(this.month+1)+'-1 0:0:0'  //当月1号的日期格式
+                var timeDate=(this.month+1)+'/1'+'/'+this.year+' 0:0:0'  //当月1号的日期格式
                 this.firstDayStamp = Date.parse(new Date(timeDate)); //指定日期的时间戳
+                console.log("firstDayStamp")
+                console.log(timeDate)
                 this.firstWeek=new Date(this.year,this.month,1).getDay();//当时间改变时获取改变时间后的第一天的星期
                 this.firstStamp=this.firstDayStamp-(this.firstWeek==0?6:this.firstWeek-1)*this.dayStamp;//当表格第一格的时间戳
             },
@@ -154,7 +156,6 @@
                 }
                 var getTime=this.Format(this.modeStamp,"YYYY-MM-DD")  //获取选择时间时间的日期（只要日）
                 if(this.getTime){
-                    console.log(this.hour)
                     getTime+=" "+this.formatTime(this.hour)+":"+this.formatTime(this.minutes)+":"+this.formatTime(this.seconds) //然后加上具体的时间
                 }
 
@@ -215,6 +216,16 @@
                 })
                 return fm
             },
+            /*日期转时间戳*/
+            timeToFormat:function (value) {
+                var regex=/(\d{4})\D(\d{2})\D(\d{2})(\D(\d{2})\D(\d{2})\D(\d{2}))?/;
+                var toStandData=value.replace(regex,"$2/$3/$1 $5:$6:$7")||value.replace(regex,"$1-$2-$3")
+                if(toStandData.indexOf("::")>-1){
+                    toStandData=toStandData.replace(/\s|\:/g,'')
+                }
+
+                return Date.parse(new Date(toStandData))
+            },
             /*个数加0*/
             formatTime:function (num) {
                 return num>9?num:'0'+num
@@ -234,24 +245,31 @@
                 return (isMax||isMin)
 
             },
-            getNowDate:function () {
-                this.today=new Date().getDate()//当前日
-                this.year=new Date().getFullYear() //当前年份
-                this.month=new Date().getMonth()//当前月份
-                this.week=new Date().getDay()//当前是星期几
-                this.day=new Date().getDate()//当前日
+            getNowDate:function (value) {
+                this.today=new Date().getDate()//今天日期
+                this.week=new Date().getDay()//今天星期几
+                /*选择值的具体时间信息*/
+                this.year=this.formatDateYear(value) //当前年份
+                this.month=this.formatDateMonth(value)//当前月份
+                this.day=this.formatDateDate(value)//当前日
+                this.hour=this.formatDateHour(value)//当前时
+                this.minutes=this.formatDateMinutes(value)//当前分
+                this.seconds=this.formatDateSeconds(value)//当前秒
             },
             getValue:function () {
                 this.modelDate=this.value
-                if(!this.modelDate){
-                    this.getNowDate()
+                if(!this.modelDate){  //如果为空，选择当前时间
+                    this.getNowDate(Date.parse(new Date()))
                 }else{
-                    var stringTime=this.modelDate
-                    this.modeStamp=stringTime;
-                    this.year=this.formatDateYear(stringTime) //当前年份
-                    this.month=this.formatDateMonth(stringTime)//当前月份
-                    this.week=new Date().getDay()//当前是星期几
-                    this.day=this.formatDateDate(stringTime)//当前日
+                    /*
+                    * 如果不为空，选择判断格式
+                    * 如果是有符号的时间格式先转换为时间戳
+                    * */
+                    if(this.modelDate/2!=this.modelDate/2){
+                        this.modelDate=this.timeToFormat(this.modelDate)
+                    }
+                    this.getNowDate(this.modelDate)
+                    this.modeStamp=this.modelDate;
                 }
                 this.getFirstStamp()
             },
@@ -265,6 +283,8 @@
                 if(new Date(this.modeStamp).toDateString()===new Date(this.getMinTime).toDateString()){
                     min=this.getMinTime?this.formatDateHour(this.getMinTime):0
                 }
+                console.log(new Date(this.modeStamp).toDateString())
+                console.log(new Date(this.getMaxTime).toDateString())
 
                 if(this.hour<min){
                     this.hour=min
@@ -312,14 +332,11 @@
                 }
                 return dateList
             },
-            'showModelDate':function () {
-                return this.Format(this.modelDate)
-            },
             'getMaxTime':function () {
-                return this.maxTime?Date.parse(new Date(this.maxTime)):''
+                return this.maxTime?this.timeToFormat(this.maxTime):''
             },
             'getMinTime':function () {
-                return this.minTime?Date.parse(new Date(this.minTime)):''
+                return this.minTime?this.timeToFormat(this.minTime):''
             }
         },
         watch:{
@@ -329,7 +346,7 @@
     /*        'hour':'changeHour',
             'minutes':'changeHinters',
             'seconds':'changeSeconds',*/
-            'value':'getValue'
+            'value':'getValue',
         },
         mounted:function(){
             this.getValue()

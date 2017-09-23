@@ -18,6 +18,15 @@ module.exports={
     module:{
         rules:[
             {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+       /*         query: {
+                    presets: ['es2015']   // babelrc 文件一定不要忘了
+                }*/
+            }
+            ,
+            {
                 test:/\.css$/,
                 use:[
                     'style-loader',

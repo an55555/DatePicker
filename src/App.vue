@@ -72,7 +72,7 @@
                     date:''
                 },
                 timePicker2:{
-                    date:'',
+                    date:'1999-11-11 10:04:10',
                 },
                 timePicker3:{
                     date:'',
