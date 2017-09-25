@@ -218,6 +218,9 @@
             },
             /*日期转时间戳*/
             timeToFormat:function (value) {
+                if(value/2==value2){
+                  return value
+                }
                 var regex=/(\d{4})\D(\d{2})\D(\d{2})(\D(\d{2})\D(\d{2})\D(\d{2}))?/;
                 var toStandData=value.replace(regex,"$2/$3/$1 $5:$6:$7")||value.replace(regex,"$1-$2-$3")
                 if(toStandData.indexOf("::")>-1){
