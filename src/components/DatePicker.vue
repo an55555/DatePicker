@@ -9,6 +9,7 @@
             <span @click="month--" class="iconfont control">&#xe697;</span><span  class="showData" @click="showChoseYear=showChoseDate=false;showChoseMonth=true;">{{month+1}}月</span><span @click="month++" class="iconfont control">&#xe6a7;</span>
           </div>
           <!--今天是{{year}}年{{month+1}}月{{day}}日星期{{week}}有{{monthDayNum}}天1号是星期{{firstWeek}}表格第一天的时间戳是{{firstStamp}}-->
+          {{Date.parse(new Date(getMaxTime))}}{{getMinTime}}
           <div class="DatePickerWeek" v-show="showChoseDate">
             <span v-for="item in 7" class="dayUnit">{{item|toWeek}}</span>
           </div>
@@ -142,7 +143,7 @@
           },
 //            选择今天
             choseToday:function(){
-                this.getNowDate();
+                this.getNowDate(Date.parse(new Date()));
                 this.modeStamp=Date.parse(new Date())
                 if(!this.useConfirmBtn){
                     this.getDateBtn()
@@ -218,7 +219,7 @@
             },
             /*日期转时间戳*/
             timeToFormat:function (value) {
-                if(value/2==value2){
+                if(value/2==value/2){
                   return value
                 }
                 var regex=/(\d{4})\D(\d{2})\D(\d{2})(\D(\d{2})\D(\d{2})\D(\d{2}))?/;
@@ -238,11 +239,13 @@
                 var isMax=false,isMin=false
                 if(this.getMinTime){
                     isMin= (item<Date.parse(new Date(this.getMinTime).toDateString()))
+                    isMin= (item<this.getMinTime)
 
 
                 }
                 if(this.getMaxTime){
-                    isMax= (item>Date.parse(new Date(this.getMaxTime).toDateString()))
+//                    isMax= (item>Date.parse(new Date(this.getMaxTime).toDateString()))
+                    isMax= (item>this.getMaxTime)
                 }
 
                 return (isMax||isMin)

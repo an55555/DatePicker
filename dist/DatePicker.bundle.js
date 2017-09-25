@@ -271,6 +271,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 
 exports.default = {
     props: ['value', 'modelClass', 'placeholder', 'dateFormat', 'useConfirm', 'showTime', 'useStamp', 'maxTime', 'minTime'],
@@ -355,7 +356,7 @@ exports.default = {
         },
         //            选择今天
         choseToday: function choseToday() {
-            this.getNowDate();
+            this.getNowDate(Date.parse(new Date()));
             this.modeStamp = Date.parse(new Date());
             if (!this.useConfirmBtn) {
                 this.getDateBtn();
@@ -443,6 +444,9 @@ exports.default = {
         },
         /*日期转时间戳*/
         timeToFormat: function timeToFormat(value) {
+            if (value / 2 == value / 2) {
+                return value;
+            }
             var regex = /(\d{4})\D(\d{2})\D(\d{2})(\D(\d{2})\D(\d{2})\D(\d{2}))?/;
             var toStandData = value.replace(regex, "$2/$3/$1 $5:$6:$7") || value.replace(regex, "$1-$2-$3");
             if (toStandData.indexOf("::") > -1) {
@@ -461,9 +465,11 @@ exports.default = {
                 isMin = false;
             if (this.getMinTime) {
                 isMin = item < Date.parse(new Date(this.getMinTime).toDateString());
+                isMin = item < this.getMinTime;
             }
             if (this.getMaxTime) {
-                isMax = item > Date.parse(new Date(this.getMaxTime).toDateString());
+                //                    isMax= (item>Date.parse(new Date(this.getMaxTime).toDateString()))
+                isMax = item > this.getMaxTime;
             }
 
             return isMax || isMin;
@@ -1214,6 +1220,12 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _vm._v(
+                  "\n        " +
+                    _vm._s(Date.parse(new Date(_vm.getMaxTime))) +
+                    _vm._s(_vm.getMinTime) +
+                    "\n        "
+                ),
                 _c(
                   "div",
                   {
